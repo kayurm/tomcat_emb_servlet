@@ -1,2 +1,2 @@
 # Kate Yurm
-### hw2 embedded servlet
+### hw3 Spring ioc embedded servlet

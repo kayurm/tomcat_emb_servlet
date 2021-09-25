@@ -2,7 +2,10 @@ package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import config.TodoConfig;
 import model.TodoDTO;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 import storage.TodoMap;
 
 import javax.servlet.ServletException;
@@ -18,9 +21,16 @@ import java.io.IOException;
 )
 public class TodoServlet extends HttpServlet {
 
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT);
-    private final TodoMap todoMap = new TodoMap();
+    private ObjectMapper objectMapper;
+    private TodoMap todoMap;
+    private GenericApplicationContext context;
+
+    @Override
+    public void init() {
+        context = new AnnotationConfigApplicationContext(TodoConfig.class);
+        todoMap = context.getBean(TodoMap.class);
+        objectMapper = context.getBean(ObjectMapper.class).enable(SerializationFeature.INDENT_OUTPUT);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -44,5 +54,10 @@ public class TodoServlet extends HttpServlet {
         }
         resp.setStatus(200);
         objectMapper.writeValue(resp.getOutputStream(), "");
+    }
+
+    @Override
+    public void destroy() {
+        context.close();
     }
 }
