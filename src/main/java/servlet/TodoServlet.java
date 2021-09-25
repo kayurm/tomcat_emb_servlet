@@ -30,7 +30,7 @@ public class TodoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         TodoDTO reqTodo = objectMapper.readValue(req.getReader(), TodoDTO.class);
-        TodoDTO respTodo = todoMap.insertTodo(reqTodo);
+        TodoDTO respTodo = todoMap.saveTodo(reqTodo);
         objectMapper.writeValue(resp.getOutputStream(), respTodo);
     }
 
